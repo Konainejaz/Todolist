@@ -1,38 +1,105 @@
-.App {
+body {
+  background-color: #ebeded;
+}
+.Main {
+  overflow: hidden;
+  width: 60vw;
+  height: 75vh;
+  margin: 40px auto;
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+input {
+  width: 500%;
+  padding: 10px;
+  border: 2px solid #000000;
+  border-radius: 15px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  margin-right: 5px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+button {
+  width: 100%;
+  margin-bottom: 11px;
+  text-wrap: nowrap;
+  padding: 8px 0px;
+  position: relative;
+  top: 0px;
+  border: 0px;
+  border-radius: 16px;
+  background-color: #05c545;
   color: white;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
 
-.App-link {
-  color: #61dafb;
+button:hover {
+  background-color: #04a339;
+  transition: all 0.3s ease-in-out;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+ol{
+  list-style-position: inside;           
+  padding: 0;
+  overflow: hidden;
+  
+}
+.header{
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
+}
+li {
+  padding: 10px;
+  margin-bottom: 0px;  
+  font-family: Arial, Helvetica, sans-serif;         
+} 
+li:not(:last-child){
+  border-bottom: 1.3px solid rgb(229, 219, 219);           
+}    
+.close{
+  float: right;
+  cursor: pointer;
+  text-align: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  transition: all 0.5s ease-out;
+} 
+.close:hover{          
+  background-color: rgb(170, 178, 181);
+  transition: all 0.3s ease-out;
+}
+ol#myUL {
+  list-style-position: inside;
+  padding: 0;
+  overflow-y: auto; /* Add overflow-y: auto for vertical scrollbar */
+  height: 50vh; /* Set a fixed height for the list container */
+} 
+footer{
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-style: italic;
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #4d4d4d;
+  
+}
+#develop{
+  color: #4d4d4d;
+  font-size: 12px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: italic;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  
 }
