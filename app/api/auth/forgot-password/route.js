@@ -4,26 +4,44 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
+const lastRequestByEmail = new Map();
+
 export async function POST(request) {
   try {
     const { email } = await request.json();
+    const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
 
-    if (!email) {
+    if (!normalizedEmail) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
+    const now = Date.now();
+    const lastRequestAt = lastRequestByEmail.get(normalizedEmail);
+    if (lastRequestAt && now - lastRequestAt < 60_000) {
+      return NextResponse.json(
+        { error: 'Please wait 60 seconds before requesting another OTP.' },
+        { status: 429 }
+      );
+    }
+    lastRequestByEmail.set(normalizedEmail, now);
+
     let otp = null;
     try {
-      otp = await createPasswordResetOtp(email);
+      otp = await createPasswordResetOtp(normalizedEmail);
     } catch (e) {
-      if (e?.message !== 'Please wait before requesting another OTP') {
-        throw e;
+      if (e?.message === 'Please wait before requesting another OTP') {
+        return NextResponse.json(
+          { error: 'Please wait 60 seconds before requesting another OTP.' },
+          { status: 429 }
+        );
       }
+      throw e;
     }
 
+    let emailResult = null;
     if (otp) {
       const emailContent = {
-        to: email,
+        to: normalizedEmail,
         subject: 'Your TaskMaster Password Reset Code',
         text: `Your password reset code is: ${otp}. This code expires in 10 minutes.`,
         html: `
@@ -38,12 +56,14 @@ export async function POST(request) {
         `
       };
 
-      await sendEmail(emailContent);
+      emailResult = await sendEmail(emailContent);
     }
 
     // Always return success to prevent email enumeration
-    return NextResponse.json({ 
-      message: 'If an account exists for this email, you will receive an OTP shortly.' 
+    return NextResponse.json({
+      message: 'If an account exists for this email, you will receive an OTP shortly.',
+      previewUrl: process.env.NODE_ENV === 'production' ? undefined : emailResult?.previewUrl,
+      sent: process.env.NODE_ENV === 'production' ? undefined : Boolean(otp),
     });
   } catch (error) {
     console.error('Forgot password error:', error);

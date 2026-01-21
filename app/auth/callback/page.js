@@ -18,18 +18,31 @@ export default function AuthCallbackPage() {
         }
 
         const url = new URL(window.location.href);
-        const code = url.searchParams.get('code');
-        if (!code) {
-          setStatus('Missing OAuth code.');
+        const error = url.searchParams.get('error');
+        const errorDescription = url.searchParams.get('error_description');
+        if (error) {
+          setStatus(errorDescription ? `${error}: ${errorDescription}` : error);
           return;
         }
 
-        const { data: exchangeData, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
-        if (exchangeError) throw exchangeError;
+        const code = url.searchParams.get('code');
 
-        const accessToken = exchangeData?.session?.access_token;
+        const hashParams = new URLSearchParams(window.location.hash.startsWith('#') ? window.location.hash.slice(1) : window.location.hash);
+        const accessTokenFromHash = hashParams.get('access_token');
+
+        let accessToken = null;
+        if (accessTokenFromHash) {
+          accessToken = accessTokenFromHash;
+          window.history.replaceState({}, document.title, '/auth/callback');
+        } else if (code) {
+          const { data: exchangeData, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+          if (exchangeError) throw exchangeError;
+          accessToken = exchangeData?.session?.access_token;
+        }
+
         if (!accessToken) {
-          setStatus('Missing access token.');
+          const callbackUrl = `${window.location.origin}/auth/callback`;
+          setStatus(`Missing OAuth code. Ensure this URL is allowed in Supabase Auth redirect URLs: ${callbackUrl}`);
           return;
         }
 
@@ -71,4 +84,3 @@ export default function AuthCallbackPage() {
     </div>
   );
 }
-

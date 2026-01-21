@@ -180,13 +180,27 @@ export function ForgotPasswordModal({ isOpen, onClose, onShowLogin }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),
       });
-      if (res.ok) {
-        setEmail(values.email);
-        setStep('verify');
-      } else {
-        const data = await res.json();
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
         message.error(data.error || 'Request failed');
+        return;
       }
+
+      if (data?.previewUrl) {
+        message.info(
+          <span>
+            Dev email preview: <a href={data.previewUrl} target="_blank" rel="noreferrer">open OTP email</a>
+          </span>
+        );
+      } else if (data?.sent === false) {
+        message.warning('No account found for this email');
+        return;
+      } else {
+        message.success(data?.message || 'OTP requested');
+      }
+
+      setEmail(values.email);
+      setStep('verify');
     } catch {
       message.error('An error occurred');
     } finally {

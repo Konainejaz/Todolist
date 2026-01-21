@@ -7,11 +7,14 @@ export async function POST(request) {
   try {
     const { email, otp, password } = await request.json();
 
-    if (!email || !otp || !password) {
+    const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
+    const normalizedOtp = typeof otp === 'string' ? otp.replace(/\D/g, '').slice(0, 6) : '';
+
+    if (!normalizedEmail || !normalizedOtp || !password) {
       return NextResponse.json({ error: 'Email, OTP and new password are required' }, { status: 400 });
     }
 
-    await resetPasswordWithOtp(email, otp, password);
+    await resetPasswordWithOtp(normalizedEmail, normalizedOtp, password);
 
     return NextResponse.json({ message: 'Password reset successful' });
   } catch (error) {
