@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "sessions": [
+    {
+      "id": "9aabc699-0444-41a9-862c-da816e0163af",
+      "userId": "00c8a65b-6ad4-4f68-98a5-a8dd55b83091",
+      "createdAt": "2026-01-20T11:37:30.657Z",
+      "expiresAt": 1770118650657
+    },
+    {
+      "id": "b9176edb-8240-499e-8e68-390aef2f5acb",
+      "userId": "00c8a65b-6ad4-4f68-98a5-a8dd55b83091",
+      "createdAt": "2026-01-20T11:57:27.565Z",
+      "expiresAt": 1770119847565
+    }
+  ]
+}

@@ -1,6 +1,8 @@
-import { getSession, updateUser, getUsers } from '@/lib/auth';
+import { getSession, updateUser } from '@/lib/auth';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+
+export const runtime = 'nodejs';
 
 export async function PUT(request) {
   try {
@@ -18,15 +20,6 @@ export async function PUT(request) {
 
     const updates = await request.json();
     const userId = session.userId;
-
-    // Email uniqueness check is handled inside updateUser, 
-    // but we can add an explicit check here too for clarity as requested.
-    if (updates.email) {
-      const users = await getUsers();
-      if (users.some(u => u.email === updates.email && u.id !== userId)) {
-        return NextResponse.json({ error: 'Email already exists' }, { status: 400 });
-      }
-    }
 
     const updatedUser = await updateUser(userId, updates);
 

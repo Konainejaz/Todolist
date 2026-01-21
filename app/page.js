@@ -189,7 +189,7 @@ function HomeContent() {
                   size="large" 
                   block 
                   onClick={handleGuestLogin}
-                  className="h-12 text-lg rounded-xl border-slate-200 dark:border-slate-700"
+                  className="h-12 text-lg rounded-xl border-slate-200 dark:border-slate-700 dark:!text-white"
                 >
                   Try as Guest
                 </Button>

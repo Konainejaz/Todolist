@@ -2,6 +2,8 @@ import { createPasswordResetOtp } from '@/lib/auth';
 import { sendEmail } from '@/lib/email';
 import { NextResponse } from 'next/server';
 
+export const runtime = 'nodejs';
+
 export async function POST(request) {
   try {
     const { email } = await request.json();

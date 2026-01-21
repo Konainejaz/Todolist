@@ -1,6 +1,8 @@
 import { createUser, createSession } from '@/lib/auth';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+
+export const runtime = 'nodejs';
 import crypto from 'crypto';
 
 export async function POST() {

@@ -1,6 +1,8 @@
-import { getSession, getUsers, deleteSession } from '@/lib/auth';
+import { getSession, getUserById, deleteSession } from '@/lib/auth';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+
+export const runtime = 'nodejs';
 
 export async function GET() {
   try {
@@ -16,8 +18,7 @@ export async function GET() {
       return NextResponse.json({ user: null });
     }
 
-    const users = await getUsers();
-    const user = users.find(u => u.id === session.userId);
+    const user = await getUserById(session.userId);
 
     if (!user) {
       return NextResponse.json({ user: null });

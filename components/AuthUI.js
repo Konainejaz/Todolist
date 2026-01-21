@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Form, Input, Button, message, Divider } from 'antd';
+import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { User, Lock, Mail, UserPlus, LogIn, Settings, Key } from 'lucide-react';
 
 export function LoginModal({ isOpen, onClose, onLoginSuccess, onShowSignup, onGuestLogin, onShowForgotPassword }) {
@@ -66,6 +67,26 @@ export function LoginModal({ isOpen, onClose, onLoginSuccess, onShowSignup, onGu
       <Divider>OR</Divider>
       
       <div className="space-y-3">
+        <Button block size="large" onClick={async () => {
+          try {
+            const supabase = getSupabaseBrowser();
+            if (!supabase) {
+              message.error('Google sign-in is not configured');
+              return;
+            }
+            const { data, error } = await supabase.auth.signInWithOAuth({
+              provider: 'google',
+              options: {
+                redirectTo: `${window.location.origin}/auth/callback`,
+              },
+            });
+            if (error) throw error;
+          } catch (e) {
+            message.error(e?.message || 'Google sign-in failed');
+          }
+        }} className="border-slate-200 hover:border-blue-500 hover:text-blue-500">
+          Sign in with Google
+        </Button>
         <Button block size="large" onClick={onGuestLogin} className="border-slate-200 hover:border-blue-500 hover:text-blue-500">
           Continue as Guest
         </Button>

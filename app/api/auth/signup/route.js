@@ -1,6 +1,8 @@
-import { createUser, createSession, getUsers } from '@/lib/auth';
+import { createUser, createSession } from '@/lib/auth';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+
+export const runtime = 'nodejs';
 
 export async function POST(request) {
   try {
@@ -8,12 +10,6 @@ export async function POST(request) {
 
     if (!email || !password) {
       return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
-    }
-
-    // Explicit check for email existence as requested
-    const users = await getUsers();
-    if (users.some(u => u.email === email)) {
-      return NextResponse.json({ error: 'Email already exists' }, { status: 400 });
     }
 
     const user = await createUser({ email, password, name });
@@ -38,6 +34,7 @@ export async function POST(request) {
     });
   } catch (error) {
     console.error('Signup error:', error);
-    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
+    const status = error.message === 'Email already exists' ? 400 : 500;
+    return NextResponse.json({ error: error.message || 'Internal server error' }, { status });
   }
 }

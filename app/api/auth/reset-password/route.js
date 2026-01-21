@@ -1,6 +1,8 @@
 import { resetPasswordWithOtp } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 
+export const runtime = 'nodejs';
+
 export async function POST(request) {
   try {
     const { email, otp, password } = await request.json();
